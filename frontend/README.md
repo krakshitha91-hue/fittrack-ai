@@ -1,16 +1,41 @@
-# React + Vite
+# FitTrack AI frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Deploy to Vercel
 
-Currently, two official plugins are available:
+This repository contains a Vite frontend and a separate Express backend. Deploy
+the frontend to Vercel and keep the backend on Render or another Node.js host;
+the backend currently starts a persistent Express listener and is not configured
+as a Vercel serverless function.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+In the Vercel project settings, set:
 
-## React Compiler
+- **Root Directory:** `frontend`
+- **Framework Preset:** Vite
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Set `VITE_API_URL` to the backend URL if it differs from the production default
+in `src/api.js`. It may be the backend origin (for example,
+`https://api.example.com`) or the API base URL ending in `/api`. This variable is
+embedded in the frontend at build time, so redeploy after changing it.
 
-## Expanding the ESLint configuration
+On the backend host, set `FRONTEND_URL` to the deployed Vercel origin, with no
+trailing slash (for example, `https://fittrack-ai.vercel.app`). For Vercel
+preview deployments, comma-separate any additional allowed origins.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The backend also requires `MONGO_URI`, `JWT_SECRET`, and `GEMINI_API_KEY`.
+Configure these only in the backend host's environment settings, not in Vercel
+frontend variables.
+
+## Local development
+
+Install dependencies and run the frontend from this directory:
+
+```sh
+npm install
+npm run dev
+```
+
+Run the backend separately from `../backend` with `npm install` and
+`npm run dev`. The frontend uses `http://localhost:5000` for the API during
+local development.

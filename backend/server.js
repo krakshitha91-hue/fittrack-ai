@@ -13,8 +13,17 @@ const connectDB = require("./config/db");
 
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 function getIndiaDateString(date = new Date()) {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Kolkata",
@@ -52,7 +61,6 @@ function getIndiaDayRange(dateString = getIndiaDateString()) {
   };
 }
 
-app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
